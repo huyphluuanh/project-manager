@@ -16,7 +16,9 @@ export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     tailwindcss(),
-    !isTauri && VitePWA({
+    VitePWA({
+      // App Windows không dùng service worker; plugin vẫn bật để module ảo tồn tại
+      disable: isTauri,
       registerType: 'autoUpdate',
       injectRegister: false,
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
@@ -48,7 +50,7 @@ export default defineConfig(({ command }) => ({
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
     }),
-  ].filter(Boolean),
+  ],
   server: { port: 5173, strictPort: true },
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_ENV_'],
