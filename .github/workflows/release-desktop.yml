@@ -26,9 +26,6 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run tauri build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
       - name: Collect installers
         shell: pwsh
         run: |

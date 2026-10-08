@@ -1,10 +1,8 @@
 name: Database migrations
 
-# Tự áp dụng migration lên Supabase khi có file mới trong supabase/migrations được push lên main.
+# Áp dụng migration mới lên Supabase. Chạy tay ở tab Actions (cần các secret SUPABASE_*).
+# Migration đầu tiên đã được chạy qua SQL Editor nên không chạy tự động.
 on:
-  push:
-    branches: [main]
-    paths: ['supabase/migrations/**']
   workflow_dispatch:
 
 concurrency:
