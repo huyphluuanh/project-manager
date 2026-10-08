@@ -1,0 +1,49 @@
+name: Release Windows app
+
+# Tạo tag dạng v1.0.0 và push -> build ProjectManagerSetup.exe + ProjectManager.exe
+# rồi đưa lên trang Releases của repo. Có thể chạy tay ở tab Actions để chỉ lấy artifact.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npm test
+      - run: npm run tauri build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      - name: Collect installers
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out | Out-Null
+          $setup = Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe | Select-Object -First 1
+          Copy-Item $setup.FullName out/ProjectManagerSetup.exe
+          $exe = Get-ChildItem src-tauri/target/release/*.exe | Where-Object { $_.Name -in 'ProjectManager.exe', 'project-manager.exe' } | Select-Object -First 1
+          Copy-Item $exe.FullName out/ProjectManager.exe
+          Get-ChildItem out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ProjectManager-windows
+          path: out/*
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: out/*
+          generate_release_notes: true

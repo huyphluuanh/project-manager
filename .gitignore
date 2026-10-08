@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+secrets/
+
+# Supabase CLI
+supabase/.temp/
+supabase/.branches/
+
+# Tauri
+src-tauri/target/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
