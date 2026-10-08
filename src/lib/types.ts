@@ -40,6 +40,7 @@ export interface AppSettings {
   notificationsEnabled: boolean;
   overdueNotifications: boolean;
   browserNotifications: boolean;
+  reminderSound: boolean;
   defaultReminderMinutes: number;
   dueSoonDays: number;
 }

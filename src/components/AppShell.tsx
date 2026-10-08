@@ -10,9 +10,10 @@ import { autoBackupIfDue } from '../lib/exporter';
 import { isOverdue } from '../lib/logic';
 import { startNotifier, stopNotifier } from '../lib/notifier';
 import { onTrayCommand, restoreDesktopPrefs } from '../lib/platform';
-import * as repo from '../lib/repo';
-import { cx, formatDateTimeVi } from '../lib/utils';
+import { unlockAudio } from '../lib/sound';
+import { cx } from '../lib/utils';
 import { CommandPalette } from './CommandPalette';
+import { ReminderPopup } from './ReminderPopup';
 import { SAVE_EVENT } from './shared';
 import { useToast } from './feedback';
 import { NAV_ITEMS } from './navItems';
@@ -65,6 +66,17 @@ export function AppShell() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [ui, toast]);
+
+  // Trình duyệt chỉ cho phát âm thanh sau lần tương tác đầu tiên
+  useEffect(() => {
+    const unlock = () => unlockAudio();
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+  }, []);
 
   // Lệnh từ khay hệ thống (Windows)
   useEffect(() => {
@@ -186,7 +198,7 @@ export function AppShell() {
       <ProjectFormHost />
       <CommandPalette />
       <ShortcutsHelp />
-      <ReminderAlerts />
+      <ReminderPopup />
     </div>
   );
 }
@@ -236,31 +248,5 @@ function ShortcutsHelp() {
       </table>
       <p className="px-4 py-3 text-xs text-muted">Trên trình duyệt, Chrome giữ Ctrl+N / Ctrl+Shift+N cho cửa sổ mới — dùng phím N / P thay thế. App Windows dùng được tất cả.</p>
     </Modal>
-  );
-}
-
-/** Popup nhắc việc còn chờ xử lý: Snooze / Dismiss / Done */
-function ReminderAlerts() {
-  const toast = useToast();
-  const { openTask } = useUI();
-  const fired = useLiveQuery(async () => (await getDb().t('reminders').where('status').equals('fired').toArray()).filter((r) => !r.deleted_at), []) ?? [];
-  if (!fired.length) return null;
-  return (
-    <div className="fixed right-4 bottom-36 z-40 flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2 md:bottom-6" role="alert">
-      {fired.slice(0, 3).map((r) => (
-        <div key={r.id} className="rounded-xl border border-border bg-surface p-3 shadow-lg">
-          <button type="button" className="text-left text-sm font-medium hover:underline" onClick={() => r.task_id && openTask(r.task_id)}>
-            ⏰ {r.title || 'Nhắc việc'}
-          </button>
-          <p className="text-xs text-muted">{formatDateTimeVi(r.remind_at)}</p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            <Button size="sm" onClick={() => void toast.run(() => repo.snoozeReminder(r.id, 10))}>Snooze 10p</Button>
-            <Button size="sm" onClick={() => void toast.run(() => repo.snoozeReminder(r.id, 60))}>1 giờ</Button>
-            <Button size="sm" onClick={() => void toast.run(() => repo.dismissReminder(r.id))}>Dismiss</Button>
-            {r.task_id && <Button size="sm" variant="primary" onClick={() => void toast.run(() => repo.reminderMarkDone(r), 'Đã hoàn thành task')}>Done</Button>}
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }

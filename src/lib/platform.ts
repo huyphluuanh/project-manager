@@ -57,6 +57,20 @@ export async function setMinimizeToTray(on: boolean) {
   await invoke('set_minimize_to_tray', { enabled: on });
 }
 
+/** App Windows đang ẩn ở khay -> hiện cửa sổ lên trước để thấy nhắc việc */
+export async function bringToFront() {
+  if (!isTauri()) return;
+  try {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    const w = getCurrentWindow();
+    await w.unminimize();
+    await w.show();
+    await w.setFocus();
+  } catch (e) {
+    console.warn('bringToFront failed', e);
+  }
+}
+
 /** Mở link ngoài: trình duyệt mặc định (Windows app) hoặc tab mới (web) */
 export async function openExternal(url: string) {
   if (isTauri()) {

@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   notificationsEnabled: true,
   overdueNotifications: true,
   browserNotifications: false,
+  reminderSound: true,
   defaultReminderMinutes: 15,
   dueSoonDays: 7,
 };

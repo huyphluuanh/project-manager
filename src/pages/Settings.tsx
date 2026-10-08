@@ -1,5 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Database, Download, FileJson, FileSpreadsheet, Keyboard, LogOut, Monitor, Moon, RefreshCw, Sun, Upload } from 'lucide-react';
+import { BellRing, Database, Download, FileJson, FileSpreadsheet, Keyboard, LogOut, Monitor, Moon, RefreshCw, Sun, Upload, Volume2 } from 'lucide-react';
+import { REMINDER_PREVIEW_EVENT } from '../components/ReminderPopup';
+import { playChime } from '../lib/sound';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useConfirm, useToast } from '../components/feedback';
 import { Button, Card, Field, Input, Modal, Segmented, Select, Toggle } from '../components/ui';
@@ -108,6 +110,11 @@ function NotificationSettings() {
     <Block title="Notifications">
       <Toggle label="Bật thông báo & nhắc việc" checked={s.notificationsEnabled} onChange={(v) => save({ notificationsEnabled: v })} />
       <Toggle label="Thông báo task quá hạn" checked={s.overdueNotifications} onChange={(v) => save({ overdueNotifications: v })} />
+      <Toggle label="Âm thanh nhắc việc" description="Tiếng chuông nhẹ khi đến giờ nhắc" checked={s.reminderSound} onChange={(v) => save({ reminderSound: v })} />
+      <div className="flex flex-wrap gap-2 py-2">
+        <Button size="sm" icon={<Volume2 className="size-4" />} onClick={() => void playChime()}>Nghe thử</Button>
+        <Button size="sm" icon={<BellRing className="size-4" />} onClick={() => window.dispatchEvent(new Event(REMINDER_PREVIEW_EVENT))}>Xem thử nhắc việc</Button>
+      </div>
       <Toggle
         label={isTauri() ? 'Thông báo Windows' : 'Thông báo trình duyệt'}
         description={perm === 'denied' ? 'Trình duyệt đang chặn — mở cài đặt trang web để cho phép.' : perm === 'unsupported' ? 'Trình duyệt không hỗ trợ.' : 'Hiện thông báo hệ thống khi đến giờ nhắc'}

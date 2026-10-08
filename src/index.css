@@ -102,6 +102,28 @@ body {
 .prose-note a { color: var(--accent); text-decoration: underline; }
 .prose-note blockquote { border-left: 3px solid var(--border); padding-left: 0.75rem; color: var(--muted); }
 
+/* Chú mèo nhắc việc */
+@keyframes cat-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes cat-shadow { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.88); } }
+@keyframes cat-tail { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-14deg); } }
+@keyframes cat-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+@keyframes cat-ear { 0%, 88%, 100% { transform: rotate(0deg); } 92% { transform: rotate(-10deg); } 96% { transform: rotate(4deg); } }
+@keyframes cat-head { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes cat-clock { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-6deg); } 40% { transform: rotate(6deg); } 60% { transform: rotate(-4deg); } 80% { transform: rotate(4deg); } }
+@keyframes cat-rings { 0%, 100% { opacity: 0; } 30%, 60% { opacity: 1; } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.85) translateY(12px); } to { opacity: 1; transform: none; } }
+
+.cat-bob { animation: cat-bob 2.4s ease-in-out infinite; }
+.cat-shadow { animation: cat-shadow 2.4s ease-in-out infinite; transform-origin: 100px 186px; }
+.cat-tail { animation: cat-tail 1.6s ease-in-out infinite; }
+.cat-eyes { animation: cat-blink 4s infinite; }
+.cat-ear-l { animation: cat-ear 5s infinite; }
+.cat-ear-r { animation: cat-ear 5s infinite 0.4s; }
+.cat-head { animation: cat-head 3.2s ease-in-out infinite; }
+.cat-clock { animation: cat-clock 0.9s ease-in-out infinite; }
+.cat-rings { animation: cat-rings 0.9s ease-in-out infinite; }
+.pop-in { animation: pop-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+
 /* In báo cáo -> PDF */
 @media print {
   .no-print { display: none !important; }
