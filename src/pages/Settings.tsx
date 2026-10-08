@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { BellRing, Database, Download, FileJson, FileSpreadsheet, Keyboard, LogOut, Monitor, Moon, RefreshCw, Sun, Upload, Volume2 } from 'lucide-react';
 import { REMINDER_PREVIEW_EVENT } from '../components/ReminderPopup';
+import { UserManagement } from '../components/UserManagement';
 import { playChime } from '../lib/sound';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useConfirm, useToast } from '../components/feedback';
@@ -30,6 +31,7 @@ export function Settings() {
       <General />
       <NotificationSettings />
       <DataSettings />
+      <UserManagement />
       <AccountSettings />
       <p className="pb-4 text-center text-xs text-muted">Project Manager v{__APP_VERSION__} · {isTauri() ? 'Windows app' : 'Web app'}</p>
     </div>

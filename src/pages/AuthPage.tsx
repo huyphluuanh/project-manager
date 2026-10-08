@@ -115,7 +115,7 @@ export function AuthPage() {
       </form>
       <p className="mt-4 text-center text-sm text-muted">
         {mode === 'login' ? (
-          <>Chưa có tài khoản? <button type="button" className="text-accent hover:underline" onClick={() => { setMode('register'); setError(null); }}>Đăng ký</button></>
+          <>Chưa có tài khoản hoặc quên mật khẩu? Hãy nhờ người quản lý tạo / đặt lại cho bạn.</>
         ) : (
           <button type="button" className="text-accent hover:underline" onClick={() => { setMode('login'); setError(null); }}>← Quay lại đăng nhập</button>
         )}

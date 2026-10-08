@@ -49,6 +49,18 @@ Chủ dự án: GitHub `huyphluuanh`. Trao đổi bằng **tiếng Việt**.
   đưa qua `cmd /c "... < file"` (pipe trong PowerShell 5.1 làm hỏng input); không bao giờ in token ra.
 - Supabase gói Free tạm dừng sau 7 ngày không hoạt động → Dashboard → Restore project.
 
+## Tài khoản người dùng
+
+- Đăng ký tự do **đã tắt** (`disable_signup`). Người quản lý (bảng `public.app_admins`, hiện là
+  huyphluuanh@gmail.com) tạo / đặt lại mật khẩu / xóa tài khoản ở **Settings → Người dùng**.
+- Thao tác này chạy qua Edge Function `supabase/functions/admin-users` (dùng service_role ở server).
+  Deploy: `supabase functions deploy admin-users --project-ref ukxoxtjjapomeossebzx --no-verify-jwt --use-api`.
+- Supabase CLI đã đăng nhập trên máy này (token trong Windows Credential Manager, target
+  `Supabase CLI:supabase`). CLI tự chuyển sang chế độ JSON không tương tác khi thấy biến `AI_AGENT` /
+  `CLAUDECODE` → xóa các biến `CLAUDE*`, `AI_AGENT`, `NO_COLOR` trước khi chạy. Chạy SQL không cần mật khẩu DB:
+  Management API `POST /v1/projects/<ref>/database/query` với token đó (nhớ thêm dòng vào
+  `supabase_migrations.schema_migrations`). Cấu hình Auth: `PATCH /v1/projects/<ref>/config/auth`.
+
 ## Kiến trúc tóm tắt
 
 React 19 + Vite + Tailwind 4; dữ liệu local-first trong IndexedDB (Dexie) với outbox; `src/lib/sync.ts`
